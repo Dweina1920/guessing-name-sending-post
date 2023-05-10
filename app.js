@@ -8,9 +8,10 @@ const startOver = document.querySelector(".resultParas");
 const lowOrHi = document.querySelector(".lowOrHi");
 const p = document.createElement("p");
 let previousGuesses = [];
-let numGuesses = 1;
+let numGuesses = 0;
 let playGame = true;
 let remainingSeconds = 60;
+console.log(randomNumber)
 
 document.querySelector("#remaining-time").innerHTML = remainingSeconds;
 
@@ -18,10 +19,10 @@ document.querySelector("#remaining-time").innerHTML = remainingSeconds;
 let timer = setInterval(updateRemainingTime, 1000);
 
 function updateRemainingTime() {
-  console.log(
-    "Me ejecuto cada segundo. Valor de remainingSeconds: ",
-    remainingSeconds
-  );
+  //console.log(
+   // "Me ejecuto cada segundo. Valor de remainingSeconds: ",
+  //  remainingSeconds
+ // );
   // 1. Decremntar en 1 la variable de estado remainingSeconds
   remainingSeconds = remainingSeconds - 1;
 
@@ -77,6 +78,32 @@ function validateGuess(guess) {
 async function sendScoreToServer() {
   // TODO: CODE ME!!
   console.log("Enviando los datos al servidor de King.com"); //POST
+  let elapsedTime = 60 - remainingSeconds;
+  const score ={
+    "machine": "Dina",
+    "elapsed_time": elapsedTime,
+    "attempts":numGuesses
+  }
+
+ console.log(JSON.stringify(score))
+              // Enviamos los datos al endpoint https://singulars2023.free.beeceptor.com 
+              const response = await fetch("https://omiras-reimagined-rotary-phone-rpgp96g5x7fx55x-3000.preview.app.github.dev/score", {
+                // especificamos que queremos hacer un POST
+                method: "POST",
+                // Especificamos el formato de los datos que enviamos
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                // body son los datos que enviamos en formato string
+                body: JSON.stringify(score),
+            });
+ 
+            // La respuesta del servidor a ver si ha llegado bien nuestro datos
+            const data = await response.json();
+            console.log(data);
+            
+ 
+       
 }
 
 function checkGuess(guess) {
